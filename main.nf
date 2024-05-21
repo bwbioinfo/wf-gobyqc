@@ -33,6 +33,25 @@ process getVersions {
     """
 }
 
+process run_nanoplot {
+    label "nanoplot_container"
+    input:
+     // both inputs might be `OPTIONAL_FILE` --> stage in different sub-directories
+        // to avoid name collisions
+        path(reads, stageAs: "reads/*")
+    output:
+        path "out/*"
+
+    script:
+    String reads = reads.fileName.name == OPTIONAL_FILE.name ? "" : reads
+    """
+    NanoPlot \
+        -t 16 \
+        --fastq $reads \
+        --plots kde hex dot
+        """
+}
+
 
 process makeReport {
     label "wftemplate"
@@ -111,6 +130,10 @@ process collectIngressResultsInDir {
     """
 }
 
+
+
+
+
 // workflow module
 workflow pipeline {
     take:
@@ -124,6 +147,9 @@ workflow pipeline {
         .map{
             it.size() == 4 ? it : [it[0], it[1], null, it[2]]
         }
+        // neta, fastq, stats
+
+        results_nanoplot = run_nanoplot(reads)
 
         client_fields = params.client_fields && file(params.client_fields).exists() ? file(params.client_fields) : OPTIONAL_FILE
         software_versions = getVersions()
@@ -161,7 +187,6 @@ workflow pipeline {
         // TODO: use something more useful as telemetry
         telemetry = workflow_params
 }
-
 
 // entrypoint workflow
 WorkflowMain.initialise(workflow, params, log)
@@ -242,3 +267,5 @@ workflow.onComplete {
 workflow.onError {
     Pinguscript.ping_error(nextflow, workflow, params)
 }
+
+// todo add workflow nanoplot
