@@ -19,7 +19,10 @@ include {
 } from './lib/common'
 
 
+//TODO: Sort through what is needed
 OPTIONAL_FILE = file("$projectDir/data/OPTIONAL_FILE")
+
+IMAGE_FILE = file("$projectDir/test_data/report_files/test_image.png")
 
 process getVersions {
     label "wfgobyqc"
@@ -32,8 +35,8 @@ process getVersions {
     fastcat --version | sed 's/^/fastcat,/' >> versions.txt
     """
 }
-
-
+ 
+//TODO: replace dummy image with real image
 process makeReport {
     label "wfgobyqc"
     input:
@@ -58,6 +61,7 @@ process makeReport {
         $client_fields_args \
         --params params.json \
         --metadata metadata.json \
+        --extra_plots $IMAGE_FILE \
         --wf_version $wf_version
     """
 }

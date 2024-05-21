@@ -1,19 +1,31 @@
 """Create workflow report."""
 import json
 
-from dominate.tags import p
+from dominate.tags import h6, img, p, span, table, tbody, td, th, thead, tr
 from ezcharts.components import fastcat
 from ezcharts.components.reports import labs
 from ezcharts.layout.snippets import Tabs
 from ezcharts.layout.snippets.table import DataTable
 import pandas as pd
+import base64
 
 from .util import get_named_logger, wf_parser  # noqa: ABS101
 
 
+def process_images(images):
+    """Take a list of images and make into base64."""
+    result = []
+    for image in images:
+        with open(image, "rb") as image_file:
+            encoded_string = base64.b64encode(
+                image_file.read()).decode('ascii')
+            result.append(encoded_string)
+    return result
+
 def main(args):
     """Run the entry point."""
     logger = get_named_logger("Report")
+    images = process_images(args.extra_plots)
     report = labs.LabsReport(
         "GobyQC Workflow Report", "wf-gobyqc",
         args.params, args.versions, args.wf_version)
@@ -49,12 +61,21 @@ def main(args):
             'barcode': d['barcode']
         } for d in json.load(metadata)]
 
-    if args.stats:
+    if args.extra_plots:
         with report.add_section("Additional Plots", "Additional Plots"):
-            import base64
-            with open("test_image.png", "rb") as image_file:
-                encoded_string = base64.b64encode(image_file.read())
-            encoded_string
+            p("""N.B. The read length affects the results of QDNASeq analysis.
+            In future versions we will provide preset parameters based on
+            detected read length""")
+            h6("Quality Control Plots")
+            
+            with table():
+                with tbody():
+                    with tr():
+                        for image in images:
+                            td(img(src=f"data:image/png;base64,{image}"))
+                    with tr():
+                        td("""Output of Nanoplot qc program""")
+
             # names = tuple(d['sample'] for d in sample_details)
             # stats = tuple(args.stats)
             # if len(stats) == 1:
@@ -85,6 +106,7 @@ def main(args):
 
 def argparser():
     """Argument parser for entrypoint."""
+
     parser = wf_parser("report")
     parser.add_argument("report", help="Report output file")
     parser.add_argument(
@@ -105,4 +127,7 @@ def argparser():
     parser.add_argument(
         "--wf_version", default='unknown',
         help="version of the executed workflow")
+    parser.add_argument(
+        "--extra_plots", nargs='+', default='unknown',
+        help="Extra plots to include in report")
     return parser
