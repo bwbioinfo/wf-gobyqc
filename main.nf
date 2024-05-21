@@ -36,6 +36,26 @@ process getVersions {
     """
 }
  
+process run_nanoplot {
+    label "nanoplot_container"
+    input:
+     // both inputs might be `OPTIONAL_FILE` --> stage in different sub-directories
+        // to avoid name collisions
+        path(reads, stageAs: "reads/*")
+    output:
+        path "out/*"
+
+    script:
+    String reads = reads.fileName.name == OPTIONAL_FILE.name ? "" : reads
+    """
+    NanoPlot \
+        -t 16 \
+        --fastq $reads \
+        --plots kde hex dot
+        """
+}
+
+ 
 //TODO: replace dummy image with real image
 process makeReport {
     label "wfgobyqc"
@@ -128,6 +148,8 @@ workflow pipeline {
         .map{
             it.size() == 4 ? it : [it[0], it[1], null, it[2]]
         }
+
+        // results_nanoplot = run_nanoplot(reads)
 
         client_fields = params.client_fields && file(params.client_fields).exists() ? file(params.client_fields) : OPTIONAL_FILE
         software_versions = getVersions()
