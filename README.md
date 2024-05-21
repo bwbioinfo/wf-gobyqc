@@ -2,8 +2,9 @@
 
 GobyQC is a Nextflow pipeline for quality controlling the total run data from Oxford Nanopore fastqs. 
 
-Input: one, multiple of directory of .fastq files 
-Output: .html report 
+*Input*: one, multiple of directory of .fastq files 
+
+*Output*: .html report 
 
 
 ## Introduction
