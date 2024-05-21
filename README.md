@@ -1,6 +1,6 @@
 # GobyQC Workflow
 
-GobyQC is a Nextflow pipeline for quality controlling the total run data from Oxford Nanopore fastqs. 
+GobyQC is a Nextflow pipeline for quality controlling the total run data from Oxford Nanopore fastqs. This pipeline uses [NanoPlot](https://github.com/wdecoster/NanoPlot), a plotting tool designed for long read sequencing data. 
 
 **Input**: one, multiple or directory of .fastq files 
 
@@ -15,9 +15,9 @@ This workflow can be used for the following:
 
 1. To generate statistics on fastq files (total reads, total number of bps, N50)
 2. Generate a read length distribution plot
-3. Generate a quality score distribution plot 
-
-
+   ![alt text for screen readers](./Non_weightedHistogramReadlength.png "Text to show on mouseover") 
+4. Generate a read length vs quality score distribution plot
+   ![alt text for screen readers](./LengthvsQualityScatterPlot_dot.png "Text to show on mouseover") 
 
 ## Compute requirements
 
@@ -31,10 +31,9 @@ Minimum requirements:
 + CPUs = 2
 + Memory = 2GB
 
-Approximate run time: 5 minutes per sample
+Approximate run time: ## ????
 
 ARM processor support: True
-
 
 
 ## Install and run
@@ -71,22 +70,19 @@ nextflow run epi2me-labs/wf-template \
 For further information about running a workflow on the cmd line see https://labs.epi2me.io/wfquickstart/
 
 
+## Pipeline overview
 
+<!---High level numbered list of main steps of the workflow and hyperlink to any tools used. If multiple workflows/different modes perhaps have subheadings and numbered steps. Use nested numbering or bullets where required.--->
+### 1. Concatenates input files and generate per read stats.
 
-## Related protocols
-
-<!---Hyperlinks to any related protocols that are directly related to this workflow, check the community for any such protocols.--->
-
-This workflow is designed to take input sequences that have been produced from [Oxford Nanopore Technologies](https://nanoporetech.com/) devices.
-
-Find related protocols in the [Nanopore community](https://community.nanoporetech.com/docs/).
+The [fastcat/bamstats](https://github.com/epi2me-labs/fastcat) tool is used to concatenate multifile samples to be processed by the workflow. It will also output per read stats including average read lengths and qualities.
 
 
 
 ## Input example
 
 <!---Example of input directory structure, delete and edit as appropriate per workflow.--->
-This workflow accepts either FASTQ or BAM files as input.
+This workflow accepts FASTQ(s) as input.
 
 The FASTQ or BAM input parameters for this workflow accept one of three cases: (i) the path to a single FASTQ or BAM file; (ii) the path to a top-level directory containing FASTQ or BAM files; (iii) the path to a directory containing one level of sub-directories which in turn contain FASTQ or BAM files. In the first and second cases (i and ii), a sample name can be supplied with `--sample`. In the last case (iii), the data is assumed to be multiplexed with the names of the sub-directories as barcodes. In this case, a sample sheet can be provided with `--sample_sheet`.
 
@@ -134,10 +130,6 @@ input_reads.fastq   ─── input_directory  ─── input_directory
 | out_dir | string | Directory for output of all workflow results. |  | output |
 
 
-
-
-
-
 ## Outputs
 
 Output files may be aggregated including information for all samples or provided per sample. Per-sample files will be prefixed with respective aliases and represented below as {{ alias }}.
@@ -154,36 +146,11 @@ Output files may be aggregated including information for all samples or provided
 
 
 
-## Pipeline overview
-
-<!---High level numbered list of main steps of the workflow and hyperlink to any tools used. If multiple workflows/different modes perhaps have subheadings and numbered steps. Use nested numbering or bullets where required.--->
-### 1. Concatenates input files and generate per read stats.
-
-The [fastcat/bamstats](https://github.com/epi2me-labs/fastcat) tool is used to concatenate multifile samples to be processed by the workflow. It will also output per read stats including average read lengths and qualities.
-
-
-
 ## Troubleshooting
 
 <!---Any additional tips.--->
 + If the workflow fails please run it with the demo data set to ensure the workflow itself is working. This will help us determine if the issue is related to the environment, input parameters or a bug.
 + See how to interpret some common nextflow exit codes [here](https://labs.epi2me.io/trouble-shooting/).
-
-
-
-## FAQ's
-
-<!---Frequently asked questions, pose any known limitations as FAQ's.--->
-
-If your question is not answered here, please report any issues or suggestions on the [github issues](https://github.com/epi2me-labs/wf-template/issues) page or start a discussion on the [community](https://community.nanoporetech.com/).
-
-
-
-## Related blog posts
-
-+ [Importing third-party workflows into EPI2ME Labs](https://labs.epi2me.io/nexflow-for-epi2melabs/)
-
-See the [EPI2ME website](https://labs.epi2me.io/) for lots of other resources and blog posts.
 
 
 
