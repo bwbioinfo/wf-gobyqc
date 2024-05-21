@@ -15,7 +15,7 @@ This workflow can be used for the following:
 
 1. To generate statistics on fastq files (total reads, total number of bps, N50)
 2. Generate a read length distribution plot
-   ![alt text for screen readers](./Non_weightedHistogramReadlength.png "Text to show on mouseover") 
+   ![alt text for screen readers](./Non_weightedLogTransformed_HistogramReadlength.png "Text to show on mouseover") 
 4. Generate a read length vs quality score distribution plot
    ![alt text for screen readers](./LengthvsQualityScatterPlot_kde.png "Text to show on mouseover") 
 
