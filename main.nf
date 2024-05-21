@@ -22,7 +22,7 @@ include {
 OPTIONAL_FILE = file("$projectDir/data/OPTIONAL_FILE")
 
 process getVersions {
-    label "wftemplate"
+    label "wfgobyqc"
     cpus 1
     output:
         path "versions.txt"
@@ -35,7 +35,7 @@ process getVersions {
 
 
 process makeReport {
-    label "wftemplate"
+    label "wfgobyqc"
     input:
         val metadata
         tuple path(stats, stageAs: "stats_*"), val(no_stats)
@@ -44,9 +44,9 @@ process makeReport {
         path "params.json"
         val wf_version
     output:
-        path "wf-template-*.html"
+        path "wf-gobyqc-*.html"
     script:
-        String report_name = "wf-template-report.html"
+        String report_name = "wf-gobyqc-report.html"
         String metadata = new JsonBuilder(metadata).toPrettyString()
         String stats_args = no_stats ? "" : "--stats $stats"
         String client_fields_args = client_fields.name == OPTIONAL_FILE.name ? "" : "--client_fields $client_fields"
@@ -69,7 +69,7 @@ process makeReport {
 // put the file into. If the latter is `null`, puts it into the top-level directory.
 process output {
     // publish inputs to output directory
-    label "wftemplate"
+    label "wfgobyqc"
     publishDir (
         params.out_dir,
         mode: "copy",
@@ -86,7 +86,7 @@ process output {
 // Creates a new directory named after the sample alias and moves the ingress results
 // into it.
 process collectIngressResultsInDir {
-    label "wftemplate"
+    label "wfgobyqc"
     input:
         // both inputs might be `OPTIONAL_FILE` --> stage in different sub-directories
         // to avoid name collisions

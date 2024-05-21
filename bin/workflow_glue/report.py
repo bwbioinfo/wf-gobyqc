@@ -15,7 +15,7 @@ def main(args):
     """Run the entry point."""
     logger = get_named_logger("Report")
     report = labs.LabsReport(
-        "Workflow Template Sequencing report", "wf-template",
+        "GobyQC Workflow Report", "wf-gobyqc",
         args.params, args.versions, args.wf_version)
 
     client_fields = None
@@ -48,6 +48,19 @@ def main(args):
             'type': d['type'],
             'barcode': d['barcode']
         } for d in json.load(metadata)]
+
+    if args.stats:
+        with report.add_section("Additional Plots", "Additional Plots"):
+            import base64
+            with open("test_image.png", "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+            encoded_string
+            # names = tuple(d['sample'] for d in sample_details)
+            # stats = tuple(args.stats)
+            # if len(stats) == 1:
+            #     stats = stats[0]
+            #     names = names[0]
+            # fastcat.SeqSummary(stats, sample_names=names)
 
     if args.stats:
         with report.add_section("Read summary", "Read summary"):
