@@ -1,19 +1,20 @@
-# Template workflow
+# GobyQC Workflow
 
-Nextflow workflow template repository.
+GobyQC is a Nextflow pipeline for quality controlling the total run data from Oxford Nanopore fastqs. 
 
+Input: one, multiple of directory of .fastq files 
+Output: .html report 
 
 
 ## Introduction
 
 <!---This section of documentation typically contains a list of things the workflow can perform also any other intro.--->
 
-This workflow is not intended to be used by end users.
-
 This workflow can be used for the following:
 
-+ As a template using gitlabs create project from template.
-+ For testing of any scripts that are the same across workflows such as scripts in the lib directory.
+1. To generate statistics on fastq files (total reads, total number of bps, N50)
+2. Generate a read length distribution plot
+3. Generate a quality score distribution plot 
 
 
 
@@ -32,7 +33,6 @@ Minimum requirements:
 Approximate run time: 5 minutes per sample
 
 ARM processor support: True
-
 
 
 
